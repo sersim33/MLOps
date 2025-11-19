@@ -1,0 +1,13 @@
+# Fat image
+FROM python:3.9
+
+WORKDIR /app
+
+# Встановлення бібліотек
+RUN pip install --upgrade pip
+RUN pip install torch torchvision pillow
+
+# Копіюємо скрипти та модель
+COPY inference.py model.pt /app/
+
+CMD ["python", "inference.py"]

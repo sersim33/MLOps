@@ -1,0 +1,15 @@
+===== Starting environment setup =====
+Python3 found: Python 3.13.1
+pip3 found: pip 24.3.1 from /opt/homebrew/lib/python3.13/site-packages/pip (python 3.13)
+Installing torch...
+===== Environment setup completed =====
+===== Starting environment setup =====
+Python3 found: Python 3.13.1
+pip3 found: pip 25.3 from /Users/HP/Desktop/MLOps/lesson-3/venv/lib/python3.13/site-packages/pip (python 3.13)
+Torch version: 2.9.1
+===== Environment setup completed =====
+===== Starting environment setup =====
+Python3 found: Python 3.13.1
+pip3 found: pip 25.3 from /Users/HP/Desktop/MLOps/lesson-3/venv/lib/python3.13/site-packages/pip (python 3.13)
+Torch version: 2.9.1
+===== Environment setup completed =====

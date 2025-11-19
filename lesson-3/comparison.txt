@@ -1,0 +1,24 @@
+=== Docker Image Comparison ===
+
+1. Fat Image
+   - Name: fat-model
+   - Size: 1.86GB
+   - Layers: повний набір системних і Python-залежностей (pip пакети)
+   - Зайві інструменти: багато бібліотек, які не потрібні для inference
+   - Пропозиції з оптимізації: використовувати multi-stage build, slim-базу, видалити непотрібні пакети
+
+2. Slim Image
+   - Name: slim-model
+   - Size: 768MB
+   - Layers: тільки необхідні пакети для виконання inference
+   - Зайві інструменти: майже відсутні, включено лише пакети Torch та базові системні бібліотеки
+   - Пропозиції з оптимізації: можна ще додатково стиснути образ, прибравши кеш pip або використати Alpine
+
+=== Висновки ===
+- Slim image значно легший (768MB vs 1.86GB)
+- Обидва образи виконують inference коректно
+
+
+REPOSITORY                           TAG       IMAGE ID       CREATED              SIZE
+slim-model                           latest    28d3dbfb123f   About a minute ago   768MB
+fat-model                            latest    0135b72db33b   6 minutes ago        1.86GB
