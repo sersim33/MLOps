@@ -1,85 +1,118 @@
-#!/bin/bash
+# #!/bin/bash
 
+set -e
 LOG_FILE="install.log"
 
-echo "===== Starting environment setup =====" | tee -a $LOG_FILE
+echo "===== Starting environment setup =====" | tee "$LOG_FILE"
+
+# Detect OS
+OS="$(uname -s)"
+echo "[INFO] Detected OS: $OS" | tee -a "$LOG_FILE"
 
 # ---------------------------------------
-# 1. Перевірка Python та версії
+# Helper: install package if missing
 # ---------------------------------------
-if ! command -v python3 &> /dev/null; then
-    echo "[ERROR] Python3 not found. Install with: brew install python" | tee -a $LOG_FILE
-    exit 1
-fi
+install_if_missing() {
+    local pkg="$1"
+    local check_cmd="$2"
+    local install_cmd="$3"
 
-PY_VER=$(python3 -c "import sys; print(sys.version_info.minor)")
-echo "[OK] Python3 found: $(python3 --version)" | tee -a $LOG_FILE
-
-if [ "$PY_VER" -ge 13 ]; then
-    echo "[WARNING] You are running Python 3.${PY_VER}. PyTorch has NO official wheels for 3.13 yet." | tee -a $LOG_FILE
-    echo "[WARNING] Recommended: brew install python@3.12 && create venv using python3.12" | tee -a $LOG_FILE
-fi
-
-# ---------------------------------------
-# 2. Перевірка pip
-# ---------------------------------------
-if ! command -v pip3 &> /dev/null; then
-    echo "[INFO] pip3 not found — installing via ensurepip" | tee -a $LOG_FILE
-    python3 -m ensurepip --upgrade
-else
-    echo "[OK] pip3 found: $(pip3 --version)" | tee -a $LOG_FILE
-fi
-
-echo "[INFO] Upgrading pip, setuptools, wheel..." | tee -a $LOG_FILE
-pip3 install --upgrade pip setuptools wheel >> $LOG_FILE 2>&1
+    if eval "$check_cmd" &>/dev/null; then
+        echo "[OK] $pkg already installed" | tee -a "$LOG_FILE"
+    else
+        echo "[INFO] Installing $pkg..." | tee -a "$LOG_FILE"
+        if eval "$install_cmd" >>"$LOG_FILE" 2>&1; then
+            echo "[OK] $pkg installed successfully" | tee -a "$LOG_FILE"
+        else
+            echo "[ERROR] Failed to install $pkg" | tee -a "$LOG_FILE"
+            exit 1
+        fi
+    fi
+}
 
 # ---------------------------------------
-# 3. Перевірка Docker
+# Install system dependencies (Linux only)
 # ---------------------------------------
-if ! command -v docker &> /dev/null; then
-    echo "[ERROR] Docker not found. Install Docker Desktop for macOS." | tee -a $LOG_FILE
-else
-    echo "[OK] Docker found: $(docker --version)" | tee -a $LOG_FILE
-fi
+if [[ "$OS" == "Linux" ]]; then
+    install_if_missing "Python3" \
+        "command -v python3" \
+        "sudo apt-get update && sudo apt-get install -y python3 python3-pip python3-venv"
 
-# ---------------------------------------
-# 4. Перевірка Docker Compose
-# ---------------------------------------
-if ! docker compose version &> /dev/null; then
-    echo "[ERROR] Docker Compose plugin not found." | tee -a $LOG_FILE
-else
-    echo "[OK] docker compose plugin found: $(docker compose version)" | tee -a $LOG_FILE
-fi
-
-
-# ---------------------------------------
-# 5. Django
-# ---------------------------------------
-if python3 -c "import django" 2>/dev/null; then
-    echo "[OK] Django already installed" | tee -a $LOG_FILE
-else
-    echo "[INFO] Installing Django..." | tee -a $LOG_FILE
-    pip3 install django >> $LOG_FILE 2>&1
+    install_if_missing "Docker" \
+        "command -v docker" \
+        "sudo apt-get update && sudo apt-get install -y docker.io"
+    
+    install_if_missing "Docker Compose" \
+        "docker compose version" \
+        "sudo apt-get update && sudo apt-get install -y docker-compose"
 fi
 
 # ---------------------------------------
-# 6. Перевірка та встановлення PyTorch
+# macOS dependencies (Homebrew)
 # ---------------------------------------
-echo "[INFO] Checking PyTorch..." | tee -a $LOG_FILE
+if [[ "$OS" == "Darwin" ]]; then
+    if ! command -v brew &>/dev/null; then
+        echo "[ERROR] Homebrew not installed. Install from https://brew.sh/" | tee -a "$LOG_FILE"
+        exit 1
+    fi
 
-python3 - <<EOF | tee -a $LOG_FILE
-try:
-    import torch
-    print("[OK] Torch version:", torch.__version__)
-except Exception:
-    print("[INFO] Torch not found. Attempting installation...")
-    import os, sys
-    # Python 3.13 warning
-    if sys.version_info.minor >= 13:
-        print("[ERROR] PyTorch cannot be installed on Python 3.13. Install Python 3.12!")
-    else:
-        os.system("pip install torch torchvision pillow")
+    install_if_missing "Python3" \
+        "command -v python3" \
+        "brew install python"
+
+    install_if_missing "Docker" \
+        "command -v docker" \
+        "brew install --cask docker"
+
+    install_if_missing "Docker Compose" \
+        "docker compose version" \
+        "brew install docker-compose"
+fi
+
+# ---------------------------------------
+# pip update
+# ---------------------------------------
+echo "[INFO] Updating pip, setuptools, wheel..." | tee -a "$LOG_FILE"
+python3 -m pip install --upgrade pip setuptools wheel >>"$LOG_FILE" 2>&1
+
+# ---------------------------------------
+# Install Django
+# ---------------------------------------
+install_if_missing "Django" \
+    "python3 - <<EOF
+import django
+EOF" \
+    "python3 -m pip install django"
+
+# ---------------------------------------
+# Install PyTorch (cross-platform)
+# ---------------------------------------
+
+echo "[INFO] Checking PyTorch..." | tee -a "$LOG_FILE"
+if python3 - <<EOF &>/dev/null
+import torch
 EOF
+then
+    echo "[OK] PyTorch already installed: $(python3 -c "import torch; print(torch.__version__)")" | tee -a "$LOG_FILE"
+else
+    # PyTorch does not support Python 3.13 yet
+    PY_MINOR=$(python3 -c "import sys; print(sys.version_info.minor)")
+    if [[ "$PY_MINOR" -ge 13 ]]; then
+        echo "[ERROR] PyTorch is not available for Python 3.$PY_MINOR — use Python 3.12." | tee -a "$LOG_FILE"
+        exit 1
+    fi
 
+    echo "[INFO] Installing PyTorch..." | tee -a "$LOG_FILE"
 
-echo "===== Environment setup completed =====" | tee -a $LOG_FILE
+    if [[ "$OS" == "Darwin" ]]; then
+        # macOS CPU
+        python3 -m pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cpu >>"$LOG_FILE" 2>&1
+    else
+        # Linux (CPU)
+        python3 -m pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cpu >>"$LOG_FILE" 2>&1
+    fi
+
+    echo "[OK] PyTorch installed" | tee -a "$LOG_FILE"
+fi
+
+echo "===== Environment setup completed successfully =====" | tee -a "$LOG_FILE"

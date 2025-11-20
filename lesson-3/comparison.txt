@@ -1,24 +1,37 @@
 === Docker Image Comparison ===
 
-1. Fat Image
-   - Name: fat-model
-   - Size: 1.86GB
-   - Layers: повний набір системних і Python-залежностей (pip пакети)
-   - Зайві інструменти: багато бібліотек, які не потрібні для inference
-   - Пропозиції з оптимізації: використовувати multi-stage build, slim-базу, видалити непотрібні пакети
+1. Fat Image: fat-model
+----------------------------------------
+Size: 1.86 GB
+Number of layers: 18
+- Основні шари:
+  - Python + system deps
+  - pip install torch, torchvision, pillow
+  - Копіювання inference.py та model.pt
+  - CMD ["python" "inference.py"]
 
-2. Slim Image
-   - Name: slim-model
-   - Size: 768MB
-   - Layers: тільки необхідні пакети для виконання inference
-   - Зайві інструменти: майже відсутні, включено лише пакети Torch та базові системні бібліотеки
-   - Пропозиції з оптимізації: можна ще додатково стиснути образ, прибравши кеш pip або використати Alpine
+2. Slim Image: slim-model-min
+----------------------------------------
+Size: 830 MB
+Number of layers: 16
+- Основні шари:
+ - COPY /usr/local/lib/python3.9/site-packages /usr/
+ - RUN /bin/sh -c set -eux; savedAptMark="$...
+
+3. Рекомендації щодо подальшої оптимізації slim:
+- Використовувати офіційні CPU-only wheels для PyTorch і torchvision, щоб уникнути встановлення зайвих бібліотек CUDA.
+- Видаляти зайві пакети після встановлення та обмежувати тільки runtime dependencies.
+- Об'єднати RUN-команди для мінімізації кількості шарів.
+- Перевірити можливість використання python:slim або python:alpine як базового образу для подальшого зменшення розміру.
 
 === Висновки ===
-- Slim image значно легший (768MB vs 1.86GB)
+- Slim images значно легші (768MB/830MB vs 1.86GB)
 - Обидва образи виконують inference коректно
 
 
 REPOSITORY                           TAG       IMAGE ID       CREATED              SIZE
-slim-model                           latest    28d3dbfb123f   About a minute ago   768MB
-fat-model                            latest    0135b72db33b   6 minutes ago        1.86GB
+slim-model-min                       latest    2ab0579a1ea9   About a minute ago   830MB
+<none>                               <none>    ed28ced39d21   19 minutes ago       772MB
+slim-model                           latest    a5258ae6084a   31 minutes ago       768MB
+<none>                               <none>    28d3dbfb123f   26 hours ago         768MB
+fat-model                            latest    0135b72db33b   26 hours ago         1.86GB

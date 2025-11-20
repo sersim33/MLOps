@@ -16,9 +16,11 @@
 
 ## Створення Docker-образів
 ## Fat-образ:
-- docker build -f Dockerfile.fat -t fat-model
+- docker build -f Dockerfile.fat -t fat-model .
+
 ## Slim-образ:
-- docker build -f Dockerfile.slim -t slim-model
+- docker build -f Dockerfile.slim -t slim-model .
+
 
 ## Запуск inference через Docker
 ## Fat-образ:

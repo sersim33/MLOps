@@ -1,15 +1,75 @@
-# Slim image, multi-stage build
-FROM python:3.9 as builder
+
+# # ---------- Stage 1: Builder ----------
+#     FROM python:3.9-slim AS builder
+
+#     WORKDIR /app
+    
+#     # Оновлюємо pip
+#     RUN pip install --upgrade pip
+    
+#     # Встановлюємо лише необхідні пакети
+#     # (torch + torchvision CPU + pillow)
+#     RUN pip install torch torchvision pillow
+    
+#     # ---------- Stage 2: Slim Runtime ----------
+#     FROM python:3.9-slim
+    
+#     WORKDIR /app
+    
+#     # Копіюємо залежності з builder
+#     COPY --from=builder /usr/local/lib/python3.9/site-packages /usr/local/lib/python3.9/site-packages
+    
+#     # Копіюємо модель і інференс-скрипт
+#     COPY inference.py model.pt /app/
+    
+#     # ---------- CLEANUP ----------
+#     # Видаляємо кеш pip, кеш Python, кеш компіляції torch
+#     RUN rm -rf /root/.cache/* \
+#         && rm -rf /usr/local/lib/python3.9/site-packages/*.dist-info \
+#         && find /usr/local/lib/python3.9/site-packages -type d -name "__pycache__" -exec rm -rf {} + \
+#         && find /usr/local/lib/python3.9/site-packages -type f -name "*.pyc" -delete
+    
+#     CMD ["python", "inference.py"]
+    
+# ===== Stage 1: Builder =====
+FROM python:3.12-slim AS builder
+
+# Робоча директорія
+WORKDIR /app
+
+# Оновлюємо pip і встановлюємо мінімальні пакети для build
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends build-essential git && \
+    pip install --upgrade pip setuptools wheel
+
+# Встановлюємо CPU-only PyTorch і Pillow
+RUN pip install --no-cache-dir torch torchvision pillow
+
+# Копіюємо модель і inference скрипт
+COPY model.pt inference.py /app/
+
+# ===== Stage 2: Slim runtime =====
+FROM python:3.12-slim AS runtime
 
 WORKDIR /app
-RUN pip install --upgrade pip
-RUN pip install torch torchvision pillow
 
-FROM python:3.9-slim
-WORKDIR /app
+# Копіюємо тільки потрібні пакети з builder
+COPY --from=builder /usr/local/lib/python3.12/site-packages /usr/local/lib/python3.12/site-packages
+COPY --from=builder /usr/local/bin /usr/local/bin
 
-# Копіюємо потрібні бібліотеки з builder
-COPY --from=builder /usr/local/lib/python3.9/site-packages /usr/local/lib/python3.9/site-packages
+# Копіюємо скрипти і модель
 COPY inference.py model.pt /app/
 
+# Очищуємо кеші pip і Python
+RUN rm -rf /root/.cache \
+       /usr/local/lib/python3.12/site-packages/*.dist-info \
+       /usr/local/lib/python3.12/site-packages/__pycache__
+
+# Команда запуску
 CMD ["python", "inference.py"]
+
+
+
+
+
+
