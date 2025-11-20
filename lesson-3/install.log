@@ -13,3 +13,39 @@ Python3 found: Python 3.13.1
 pip3 found: pip 25.3 from /Users/HP/Desktop/MLOps/lesson-3/venv/lib/python3.13/site-packages/pip (python 3.13)
 Torch version: 2.9.1
 ===== Environment setup completed =====
+===== Starting environment setup =====
+[OK] Python3 found: Python 3.13.1
+[OK] pip3 found: pip 25.3 from /Users/HP/Desktop/MLOps/lesson-3/venv/lib/python3.13/site-packages/pip (python 3.13)
+[OK] Docker found: Docker version 27.0.2, build 912c1ddf8a
+[INFO] docker-compose not found. Installing...
+[INFO] Django not found. Installing...
+[INFO] Checking PyTorch...
+PyTorch found: 2.9.1
+===== Environment setup completed =====
+[0;34m===== Starting environment setup =====[0m
+[0;32m[OK] Python3 found: Python 3.13.1[0m
+[0;32m[OK] pip3 found: pip 25.3 from /Users/HP/Desktop/MLOps/lesson-3/venv/lib/python3.13/site-packages/pip (python 3.13)[0m
+[0;34m[INFO] Upgrading pip, setuptools, wheel...[0m
+Requirement already satisfied: pip in ./venv/lib/python3.13/site-packages (25.3)
+Requirement already satisfied: setuptools in ./venv/lib/python3.13/site-packages (80.9.0)
+Requirement already satisfied: wheel in ./venv/lib/python3.13/site-packages (0.45.1)
+[0;32m[OK] Docker found: Docker version 27.0.2, build 912c1ddf8a[0m
+[0;32m[OK] docker compose plugin found: Docker Compose version v2.40.3-desktop.1[0m
+[0;32m[OK] Django already installed[0m
+[0;34m[INFO] Checking PyTorch...[0m
+[0;32m===== Environment setup completed =====[0m
+===== Starting environment setup =====
+[OK] Python3 found: Python 3.13.1
+[WARNING] You are running Python 3.13. PyTorch has NO official wheels for 3.13 yet.
+[WARNING] Recommended: brew install python@3.12 && create venv using python3.12
+[OK] pip3 found: pip 25.3 from /Users/HP/Desktop/MLOps/lesson-3/venv/lib/python3.13/site-packages/pip (python 3.13)
+[INFO] Upgrading pip, setuptools, wheel...
+Requirement already satisfied: pip in ./venv/lib/python3.13/site-packages (25.3)
+Requirement already satisfied: setuptools in ./venv/lib/python3.13/site-packages (80.9.0)
+Requirement already satisfied: wheel in ./venv/lib/python3.13/site-packages (0.45.1)
+[OK] Docker found: Docker version 27.0.2, build 912c1ddf8a
+[OK] docker compose plugin found: Docker Compose version v2.40.3-desktop.1
+[OK] Django already installed
+[INFO] Checking PyTorch...
+[OK] Torch version: 2.9.1
+===== Environment setup completed =====
