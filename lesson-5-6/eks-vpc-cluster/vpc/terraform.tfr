@@ -1,0 +1,9 @@
+terraform {
+  backend "s3" {
+    bucket = "mlops-tfstate-sergii-eu"
+    key    = "eks/terraform.tfstate"
+    region = var.aws_region
+  }
+}
+
+
