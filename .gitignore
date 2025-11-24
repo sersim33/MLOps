@@ -1,0 +1,18 @@
+# Ігнорувати Terraform-провайдери
+lesson-5-6/eks-vpc-cluster/.terraform/providers/
+
+# Кеші Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+*.dist-info/
+
+# Віртуальне середовище
+venv/
+.env
+
+# Логи
+*.log
+
+# Інші тимчасові файли
+.DS_Store
