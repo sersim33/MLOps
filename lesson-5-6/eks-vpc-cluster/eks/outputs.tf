@@ -1,17 +1,16 @@
-output "cluster_arn" {
-  value       = module.eks.cluster_arn
-  description = "The Amazon Resource Name (ARN) of the cluster"
+output "cluster_id" {
+  value = module.eks.cluster_id
 }
 
 output "cluster_endpoint" {
-  value       = module.eks.cluster_endpoint
-  description = "The endpoint for your EKS Kubernetes API."
+  value = module.eks.cluster_endpoint
 }
 
-output "cluster_name" {
-  value       = module.eks.cluster_name
-  description = "The name of the EKS cluster"
+output "eks_managed_node_groups" {
+  value = module.eks.eks_managed_node_groups
 }
+
+
 
 
 
