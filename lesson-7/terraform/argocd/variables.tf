@@ -1,7 +1,7 @@
 variable "aws_profile" {
   description = "AWS CLI profile"
   type        = string
-  default     = "goit-terraform"
+  default     = "admin"
 }
 
 variable "aws_region" {
@@ -13,7 +13,7 @@ variable "aws_region" {
 variable "eks_state_bucket" {
   description = "S3 bucket з remote state EKS"
   type        = string
-  default     = "mlops-terraform-goit"
+  default     = "mlops-tfstate-sergii-eu"
 }
 
 variable "eks_state_key" {
