@@ -1,0 +1,16 @@
+# ===== Terraform =====
+.terraform/
+.terraform.lock.hcl
+*.tfstate
+*.tfstate.*
+*.tfstate.backup
+
+
+# ===== Python =====
+venv/
+*/venv/
+
+
+# ===== MacOS Junk =====
+.DS_Store
+*/.DS_Store
