@@ -1,66 +1,81 @@
-# configs:
-#   cm:
-#     timeout.reconciliation: 50s
-#     accounts.devops: apiKey,login
+configs:
+  cm:
+    timeout.reconciliation: 50s
+    accounts.devops: apiKey,login
 
-#   rbac:
-#     policy.default: role:readonly
-#     policy.csv: |
-#       g, devops, role:admin
-
-# server:
-#   service:
-#     type: ClusterIP
-#   extraArgs:
-#     - --insecure
-
-# redis:
-#   enabled: true
+  rbac:
+    policy.default: role:readonly
+    policy.csv: |
+      g, devops, role:admin
 
 server:
-  resources:
-    requests:
-      cpu: 100m
-      memory: 128Mi
-    limits:
-      cpu: 250m
-      memory: 256Mi
-
-repoServer:
-  resources:
-    requests:
-      cpu: 50m
-      memory: 64Mi
-    limits:
-      cpu: 100m
-      memory: 128Mi
-
-applicationController:
-  resources:
-    requests:
-      cpu: 100m
-      memory: 128Mi
-    limits:
-      cpu: 250m
-      memory: 256Mi
-
-dex:
-  resources:
-    requests:
-      cpu: 50m
-      memory: 64Mi
-    limits:
-      cpu: 100m
-      memory: 128Mi
+  service:
+    type: ClusterIP
+  extraArgs:
+    - --insecure
 
 redis:
-  resources:
-    requests:
-      cpu: 50m
-      memory: 64Mi
-    limits:
-      cpu: 100m
-      memory: 128Mi
+  enabled: true
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# server:
+#   resources:
+#     requests:
+#       cpu: 100m
+#       memory: 128Mi
+#     limits:
+#       cpu: 250m
+#       memory: 256Mi
+
+# repoServer:
+#   resources:
+#     requests:
+#       cpu: 50m
+#       memory: 64Mi
+#     limits:
+#       cpu: 100m
+#       memory: 128Mi
+
+# applicationController:
+#   resources:
+#     requests:
+#       cpu: 100m
+#       memory: 128Mi
+#     limits:
+#       cpu: 250m
+#       memory: 256Mi
+
+# dex:
+#   resources:
+#     requests:
+#       cpu: 50m
+#       memory: 64Mi
+#     limits:
+#       cpu: 100m
+#       memory: 128Mi
+
+# redis:
+#   resources:
+#     requests:
+#       cpu: 50m
+#       memory: 64Mi
+#     limits:
+#       cpu: 100m
+#       memory: 128Mi
 
 
 
