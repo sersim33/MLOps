@@ -43,14 +43,14 @@ variable "node_groups" {
     cpu_nodes = {
       instance_type = "t3.micro"
       min_size      = 1
-      max_size      = 2
-      desired_size  = 1
+      max_size      = 3
+      desired_size  = 3
     }
     extra_nodes = {
       instance_type = "t3.micro"
-      min_size      = 0
-      max_size      = 1
-      desired_size  = 0
+      min_size      = 1
+      max_size      = 3
+      desired_size  = 3
     }
   }
 }
