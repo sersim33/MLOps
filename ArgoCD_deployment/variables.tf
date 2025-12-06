@@ -4,6 +4,13 @@ variable "aws_profile" {
   default     = "admin"
 }
 
+variable "eks_cluster_name" {
+  description = "Ім'я існуючого EKS кластера"
+  type        = string
+  default     = "goit-eks" #додано
+}
+
+
 variable "aws_region" {
   description = "AWS region for AWS provider"
   type        = string
@@ -19,7 +26,7 @@ variable "eks_state_bucket" {
 variable "eks_state_key" {
   description = "S3 key для remote state EKS"
   type        = string
-  default     = "eks/terraform.tfstate"
+  default     = "eks-vpc-cluster/terraform.tfstate"
 }
 
 variable "eks_state_region" {

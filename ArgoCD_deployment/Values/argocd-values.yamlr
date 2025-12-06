@@ -1,3 +1,6 @@
+dex:
+  enabled: false # додано
+
 configs:
   cm:
     timeout.reconciliation: 30s
@@ -10,7 +13,8 @@ configs:
 
 server:
   service:
-    type: LoadBalancer   # Замість ClusterIP
+    type: ClusterIP
+
   extraArgs:
     - --insecure
 
@@ -22,6 +26,3 @@ applicationSet:
 
 crds:
   install: true
-
-dex:
-  enabled: false
