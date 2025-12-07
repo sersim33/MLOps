@@ -38,7 +38,7 @@ variable "eks_state_region" {
 variable "argocd_namespace" {
   description = "Namespace для Argo CD"
   type        = string
-  default     = "argocd" #infra-tools
+  default     = "infra-tools" #infra-tools
 }
 
 variable "argocd_chart_version" {
