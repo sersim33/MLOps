@@ -10,7 +10,7 @@ configs:
 
 server:
   service:
-    type: LoadBalancer   # Замість ClusterIP
+    type: ClusterIP   # Замість LoadBalancer
   extraArgs:
     - --insecure
 
