@@ -4,6 +4,8 @@ terraform.tfstate.backup
 *.tfstate
 *.tfstate.*
 .terraform/
+eks-vpc-cluster/.terraform_backup/
+
 
 # Python caches
 __pycache__/
