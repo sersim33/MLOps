@@ -41,16 +41,16 @@ variable "tags" {
 variable "node_groups" {
   default = {
     cpu_nodes = {
-      instance_type = "t3.micro"
-      min_size      = 1
+      instance_type = "t3.small"
+      min_size      = 2
       max_size      = 3
-      desired_size  = 3
+      desired_size  = 2
     }
     extra_nodes = {
       instance_type = "t3.micro"
-      min_size      = 1
+      min_size      = 2
       max_size      = 3
-      desired_size  = 3
+      desired_size  = 2
     }
   }
 }
