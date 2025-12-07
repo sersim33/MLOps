@@ -47,7 +47,7 @@ variable "node_groups" {
       desired_size  = 2
     }
     extra_nodes = {
-      instance_type = "t3.micro"
+      instance_type = "t3.small"
       min_size      = 2
       max_size      = 3
       desired_size  = 2
