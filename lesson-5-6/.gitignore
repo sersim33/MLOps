@@ -1,5 +1,7 @@
 # Ігнорувати Terraform-провайдери
 .terraform/providers/
+.terraform_backup
+.terraform
 
 # Кеші Python
 __pycache__/
