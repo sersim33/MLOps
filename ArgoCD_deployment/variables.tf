@@ -50,7 +50,7 @@ variable "argocd_chart_version" {
 variable "app_repo_url" {
   description = "Git repo URL"
   type        = string
-  default     = "https://github.com/sersim33/mlops-experiments.git"
+  default     = "https://gitlab.com/sersim/aiops-quality-project.git"
 }
 
 variable "app_repo_branch" {
